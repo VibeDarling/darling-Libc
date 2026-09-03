@@ -58,7 +58,9 @@ __kernel_supports_unionfs(void)
 		int value = 0;
 		size_t len = sizeof(value);
 		sysctlbyname("kern.secure_kernel", &value, &len, NULL, 0);
-		kernel_supports_unionfs = !value;
+		/* Linux does not implement Darwin unionfs or kern.secure_kernel sysctl.
+		 * Disable unionfs support to prevent futile and broken traversal. */
+		kernel_supports_unionfs = 0;
 	}
 	return kernel_supports_unionfs;
 }
